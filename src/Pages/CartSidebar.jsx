@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Items } from "../Component/CartComponent/Items";
 import { motion, AnimatePresence } from "framer-motion";
 import { OrganicRootsLoader } from "../Component/OrganicRootsLoader";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom"; // ✅ NEW
 
-const BASE_URL = "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090";
+const BASE_URL =
+  "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090";
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -23,10 +26,12 @@ const loadRazorpayScript = () => {
 export const CartSidebar = ({ isOpen, onClose }) => {
   const [data, setData] = useState(null);
   const [item, setItem] = useState([]);
-  const [loading, setLoading] = useState(0);          // for refetch on +/-/remove
-  const [isCartLoading, setIsCartLoading] = useState(false); // 👈 sidebar loader
+  const [loading, setLoading] = useState(0); // for refetch on +/-/remove
+  const [isCartLoading, setIsCartLoading] = useState(false); // sidebar loader
   const [totalAmount, setTotalAmount] = useState(0);
   const [token] = useState(sessionStorage.getItem("token"));
+
+  const navigate = useNavigate(); // ✅ NEW
 
   // decode user (optional, just logging)
   useEffect(() => {
@@ -39,7 +44,7 @@ export const CartSidebar = ({ isOpen, onClose }) => {
     }
   }, [token]);
 
-  // 🛒 Fetch cart (no loader here)
+  // 🛒 Fetch cart
   const fetchCart = async () => {
     try {
       if (!token) return;
@@ -72,7 +77,7 @@ export const CartSidebar = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  // 🔁 When qty/remove changes (setLoading from <Items/>) → refetch quietly (no loader)
+  // 🔁 When qty/remove changes → refetch quietly (no loader)
   useEffect(() => {
     if (isOpen) {
       fetchCart();
@@ -102,7 +107,7 @@ export const CartSidebar = ({ isOpen, onClose }) => {
 
       if (!res.ok) {
         console.error("Create order failed", res.status, await res.text());
-        alert("Failed to create order");
+        toast.error("Error creating order");
         return null;
       }
 
@@ -112,26 +117,67 @@ export const CartSidebar = ({ isOpen, onClose }) => {
       return da;
     } catch (err) {
       console.error("Error creating order:", err);
-      alert("Error creating order");
+      toast.error("Error creating order");
       return null;
     }
   };
 
+  // 👉 clear cart after successful payment
+  // const clearCartOnSuccess = async () => {
+  //   try {
+  //     if (!token) {
+  //       setItem([]);
+  //       setTotalAmount(0);
+  //       return;
+  //     }
+
+  //     const res = await fetch(`${BASE_URL}/cart/clear`, {
+  //       method: "DELETE",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: "Bearer " + token,
+  //       },
+  //     });
+
+  //     if (!res.ok) {
+  //       console.error("Failed to clear cart:", res.status, await res.text());
+  //       setItem([]);
+  //       setTotalAmount(0);
+  //       toast.error(
+  //         "Payment successful, but there was an issue clearing the cart. Please refresh."
+  //       );
+  //       return;
+  //     }
+
+  //     setItem([]);
+  //     setTotalAmount(0);
+  //     toast.success("Payment successful! Your cart has been cleared.");
+  //     onClose(); // close the sidebar after success
+  //   } catch (err) {
+  //     console.error("Error clearing cart:", err);
+  //     setItem([]);
+  //     setTotalAmount(0);
+  //     toast.error(
+  //       "Payment successful, but there was an issue clearing the cart. Please refresh."
+  //     );
+  //   }
+  // };
+
   const handlePayment = async () => {
     if (!totalAmount || totalAmount <= 0) {
-      alert("Cart is empty or total amount invalid");
+      toast.error("Cart is empty");
       return;
     }
 
     const loaded = await loadRazorpayScript();
     if (!loaded) {
-      alert("Razorpay SDK failed to load. Check your internet connection.");
+      toast.error("Unable to load payment gateway");
       return;
     }
 
     const order = await createOrder();
     if (!order || !order.orderId) {
-      alert("Order details missing from backend");
+      toast.error("Could not initiate payment");
       return;
     }
 
@@ -143,11 +189,27 @@ export const CartSidebar = ({ isOpen, onClose }) => {
       description: "Order Payment",
       image: "https://example.com/your_logo",
       order_id: order.orderId,
-      handler: function (response) {
+      theme: {
+        color: "#3fa96a", // 🌿 organic green
+      },
+      handler: async function (response) {
         console.log("Payment success:", response);
-        alert("Payment ID: " + response.razorpay_payment_id);
-        alert("Order ID: " + response.razorpay_order_id);
-        alert("Signature: " + response.razorpay_signature);
+
+        // ✅ 1. Clear cart
+        // await clearCartOnSuccess();
+
+        // ✅ 2. Redirect to order success / tracking page
+        navigate("/order-success", {
+          state: {
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpayOrderId: response.razorpay_order_id,
+            razorpaySignature: response.razorpay_signature,
+            backendOrderId: order.orderId,
+            amount: grandTotal.toFixed(2),
+            eta: "25-30 mins",
+            deliveryPartner: "Organic Roots Rider",
+          },
+        });
       },
       prefill: {
         name: "saurav",
@@ -157,15 +219,12 @@ export const CartSidebar = ({ isOpen, onClose }) => {
       notes: {
         address: "ABC, Delhi",
       },
-      theme: {
-        color: "#4f46e5",
-      },
     };
 
     const rzp1 = new window.Razorpay(options);
     rzp1.on("payment.failed", function (response) {
       console.error("Payment failed:", response);
-      alert(response.error.description);
+      toast.error("Payment failed. Please try again.");
     });
 
     rzp1.open();
@@ -235,7 +294,10 @@ export const CartSidebar = ({ isOpen, onClose }) => {
             {/* header */}
             <div
               className="cart-sidebar-header d-flex justify-content-between align-items-center"
-              style={{ padding: "12px 16px", borderBottom: "1px solid #e5e7eb" }}
+              style={{
+                padding: "12px 16px",
+                borderBottom: "1px solid #e5e7eb",
+              }}
             >
               <div>
                 <h5 className="mb-0">My Cart</h5>
@@ -253,7 +315,7 @@ export const CartSidebar = ({ isOpen, onClose }) => {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                minHeight: "calc(100vh - 56px)", // approx header height
+                minHeight: "calc(100vh - 56px)",
               }}
             >
               {/* cart items */}
@@ -325,7 +387,8 @@ export const CartSidebar = ({ isOpen, onClose }) => {
                     onClick={handlePayment}
                     disabled={item.length === 0}
                     style={{
-                      background: "linear-gradient(135deg, #6bc389, #3fa96a)",
+                      background:
+                        "linear-gradient(135deg, #6bc389, #3fa96a)",
                       border: "none",
                     }}
                   >

@@ -15,8 +15,6 @@ export const Singup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-
-
   const handleSinup = async (e) => {
     e.preventDefault();
 
@@ -31,13 +29,16 @@ export const Singup = () => {
     }
 
     try {
-      const res = await fetch("http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/auth/singup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user), // role still sent to backend
-      });
+      const res = await fetch(
+        "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/auth/singup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user), // role still sent to backend
+        }
+      );
 
       const data = await res.json();
       console.log("Signup response:", data);
@@ -48,7 +49,7 @@ export const Singup = () => {
           window.location.href = "/login";
         }, 1500);
       } else {
-      toast.error( "Something went wrong!!");
+        toast.error("Something went wrong!!");
       }
     } catch (err) {
       console.error("Signup error:", err);
@@ -71,34 +72,31 @@ export const Singup = () => {
         className="login-page-wrapper d-flex justify-content-center align-items-center"
         style={{
           minHeight: "85vh",
-          padding: "20px",
+          padding: "16px",
           background:
             "radial-gradient(circle at top, rgba(111,195,137,0.25), transparent 60%), #f7fff9",
         }}
       >
         <div
-          className="login-card-landscape shadow-lg d-flex flex-row"
+          className="login-card-landscape shadow-lg d-flex flex-column flex-md-row w-100"
           style={{
             backgroundColor: "#ffffff",
             borderRadius: "18px",
             overflow: "hidden",
             maxWidth: "960px",
-            width: "100%",
             minHeight: "460px",
           }}
         >
-          {/* LEFT SIDE – avatar + centered user type cards */}
+          {/* LEFT SIDE – avatar + user type cards */}
           <div
-            className="login-visual-side"
+            className="login-visual-side d-flex flex-column w-100"
             style={{
               flex: 1.1,
               background:
                 "linear-gradient(140deg, #3fa96a, #6bc389, #a2e59c)",
               color: "#ffffff",
-              padding: "28px 24px",
+              padding: "24px 20px",
               position: "relative",
-              display: "flex",
-              flexDirection: "column",
             }}
           >
             {/* floating circles */}
@@ -132,7 +130,7 @@ export const Singup = () => {
               }}
             />
 
-            {/* center content vertically */}
+            {/* content */}
             <div
               style={{
                 flex: 1,
@@ -142,12 +140,18 @@ export const Singup = () => {
               }}
             >
               {/* avatar + text */}
-              <div style={{ marginBottom: 160 }}>
+              <div
+                style={{
+                  marginBottom: 20,
+                  textAlign: "center",
+                }}
+                className="text-md-start"
+              >
                 <div
-                  className="avatar-wrapper"
+                  className="avatar-wrapper mx-auto mx-md-0"
                   style={{
-                    width: 90,
-                    height: 90,
+                    width: 80,
+                    height: 80,
                     borderRadius: "50%",
                     background:
                       "radial-gradient(circle at 30% 20%, #ffffff, #7edea2)",
@@ -161,13 +165,13 @@ export const Singup = () => {
                 >
                   <i
                     className="fa fa-user-plus"
-                    style={{ color: "#2f6f46", fontSize: 38 }}
+                    style={{ color: "#2f6f46", fontSize: 32 }}
                   />
                 </div>
 
                 <h2
                   style={{
-                    fontSize: 26,
+                    fontSize: 22,
                     fontWeight: 700,
                     marginBottom: 8,
                   }}
@@ -179,28 +183,32 @@ export const Singup = () => {
                     fontSize: 14,
                     opacity: 0.95,
                     marginBottom: 10,
-                    maxWidth: "260px",
+                    maxWidth: "280px",
+                    marginInline: "auto",
                   }}
+                  className="mx-md-0"
                 >
                   Create your account to unlock fresh deals, curated boxes, and a
                   seamless organic shopping experience.
                 </p>
               </div>
 
-              {/* user type cards in the middle */}
+              {/* user type cards */}
               <div>
                 <p
                   style={{
                     fontSize: 13,
                     marginBottom: 6,
                     opacity: 0.9,
+                    textAlign: "center",
                   }}
+                  className="text-md-start"
                 >
                   Choose your user type:
                 </p>
 
                 <div
-                  className="d-flex flex-row flex-wrap"
+                  className="d-flex flex-row flex-wrap justify-content-center justify-content-md-start"
                   style={{ gap: "10px" }}
                 >
                   {/* Seller card */}
@@ -209,6 +217,7 @@ export const Singup = () => {
                     style={{
                       flex: "1 1 120px",
                       minWidth: "120px",
+                      maxWidth: "200px",
                       padding: "10px 12px",
                       borderRadius: "12px",
                       cursor: "pointer",
@@ -278,6 +287,7 @@ export const Singup = () => {
                     style={{
                       flex: "1 1 120px",
                       minWidth: "120px",
+                      maxWidth: "200px",
                       padding: "10px 12px",
                       borderRadius: "12px",
                       cursor: "pointer",
@@ -345,12 +355,12 @@ export const Singup = () => {
             </div>
           </div>
 
-          {/* RIGHT SIDE – signup form (User Type hidden here) */}
+          {/* RIGHT SIDE – signup form */}
           <div
-            className="login-form-side d-flex flex-column"
+            className="login-form-side d-flex flex-column w-100"
             style={{
               flex: 1,
-              padding: "26px 28px 24px",
+              padding: "22px 20px 20px",
             }}
           >
             <div
@@ -362,7 +372,7 @@ export const Singup = () => {
             >
               <h3
                 style={{
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: 600,
                   color: "#333",
                   marginBottom: 4,
@@ -548,8 +558,6 @@ export const Singup = () => {
                 </div>
               </div>
 
-              {/* no User Type select here – only left side controls it */}
-
               <div className="mt-auto">
                 <button
                   className="btn btn-primary d-block w-100"
@@ -573,13 +581,12 @@ export const Singup = () => {
                     fontSize: 13,
                   }}
                 >
-                 <p style={{ marginBottom: 0 }}>
-  Already have an account?{" "}
-  <Link id="register-link" to="/login">
-    Sign In!
-  </Link>
-</p>
-
+                  <p style={{ marginBottom: 0 }}>
+                    Already have an account?{" "}
+                    <Link id="register-link" to="/login">
+                      Sign In!
+                    </Link>
+                  </p>
                 </div>
               </div>
             </form>

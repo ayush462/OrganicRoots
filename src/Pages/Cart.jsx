@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Footer } from "../Component/Footer";
 import { Header } from "../Component/Header";
 import { Items } from "../Component/CartComponent/Items";
+import toast from "react-hot-toast";
 
 const BASE_URL = "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090";
 
@@ -72,7 +73,7 @@ export const Cart = () => {
 
       if (!res.ok) {
         console.error("Create order failed", res.status, await res.text());
-        alert("Failed to create order");
+        toast.error("Could not create order. Please try again.");
         return null;
       }
 
@@ -82,26 +83,26 @@ export const Cart = () => {
       return da;
     } catch (err) {
       console.error("Error creating order:", err);
-      alert("Error creating order");
+      toast.error("An error occurred while creating the order.");
       return null;
     }
   };
 
   const handlePayment = async () => {
     if (!totalAmount || totalAmount <= 0) {
-      alert("Cart is empty or total amount invalid");
+      toast.error("Cart is empty. Please add items to proceed.");
       return;
     }
 
     const loaded = await loadRazorpayScript();
     if (!loaded) {
-      alert("Razorpay SDK failed to load. Check your internet connection.");
+      toast.error("Razorpay SDK failed to load. Are you online?");
       return;
     }
 
     const order = await createOrder();
     if (!order || !order.orderId) {
-      alert("Order details missing from backend");
+      toast.error("Could not initiate payment. Please try again.");
       return;
     }
 
@@ -135,7 +136,7 @@ export const Cart = () => {
     const rzp1 = new window.Razorpay(options);
     rzp1.on("payment.failed", function (response) {
       console.error("Payment failed:", response);
-      alert(response.error.description);
+      toast.error("Payment failed. Please try again.");
     });
 
     rzp1.open();

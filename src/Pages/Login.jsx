@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Header } from "../Component/Header";
 import toast from "react-hot-toast";
 import { OrganicRootsLoader } from "../Component/OrganicRootsLoader";
-import { Link } from "react-router-dom";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -23,21 +22,23 @@ export const Login = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/auth/singin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
-      });
+      const res = await fetch(
+        "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/auth/singin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(user),
+        }
+      );
 
       const data = await res.json();
 
       if (res.ok) {
         sessionStorage.setItem("token", data.jwt);
         toast.success("Welcome back to OrganicRoots");
-        // use SPA navigation so toast stays visible
-        navigate("/");
+        navigate("/"); // SPA navigation so toast stays visible
       } else {
         toast.error("Invalid email or password.");
       }
@@ -57,19 +58,18 @@ export const Login = () => {
         className="login-page-wrapper d-flex justify-content-center align-items-center"
         style={{
           minHeight: "85vh",
-          padding: "20px",
+          padding: "16px",
           background:
             "radial-gradient(circle at top, rgba(111,195,137,0.25), transparent 60%), #f7fff9",
         }}
       >
         <div
-          className="login-card-landscape shadow-lg d-flex flex-row"
+          className="login-card-landscape shadow-lg d-flex flex-column flex-md-row w-100"
           style={{
             backgroundColor: "#ffffff",
             borderRadius: "18px",
             overflow: "hidden",
             maxWidth: "960px",
-            width: "100%",
             minHeight: "420px",
             opacity: loading ? 0.85 : 1,
             transition: "opacity 0.2s ease",
@@ -77,13 +77,12 @@ export const Login = () => {
         >
           {/* LEFT SIDE – visual + animation */}
           <div
-            className="login-visual-side d-flex flex-column justify-content-between"
+            className="login-visual-side d-flex flex-column justify-content-between w-100"
             style={{
               flex: 1.1,
-              background:
-                "linear-gradient(140deg, #3fa96a, #6bc389, #a2e59c)",
+              background: "linear-gradient(140deg, #3fa96a, #6bc389, #a2e59c)",
               color: "#ffffff",
-              padding: "28px 24px",
+              padding: "24px 20px",
               position: "relative",
             }}
           >
@@ -119,12 +118,12 @@ export const Login = () => {
             />
 
             {/* avatar + text */}
-            <div>
+            <div style={{ marginTop: 8, marginBottom: 16 }}>
               <div
-                className="avatar-wrapper bounce"
+                className="avatar-wrapper bounce mx-auto mx-md-0"
                 style={{
-                  width: 90,
-                  height: 90,
+                  width: 80,
+                  height: 80,
                   borderRadius: "50%",
                   background:
                     "radial-gradient(circle at 30% 20%, #ffffff, #7edea2)",
@@ -137,16 +136,18 @@ export const Login = () => {
               >
                 <i
                   className="fa fa-user"
-                  style={{ color: "#2f6f46", fontSize: 38 }}
+                  style={{ color: "#2f6f46", fontSize: 32 }}
                 />
               </div>
 
               <h2
                 style={{
-                  fontSize: 26,
+                  fontSize: 22,
                   fontWeight: 700,
                   marginBottom: 6,
+                  textAlign: "center",
                 }}
+                className="text-md-start"
               >
                 Welcome back to OrganicRoots
               </h2>
@@ -155,8 +156,10 @@ export const Login = () => {
                   fontSize: 14,
                   opacity: 0.95,
                   marginBottom: 14,
-                  maxWidth: "260px",
+                  maxWidth: "280px",
+                  textAlign: "center",
                 }}
+                className="mx-auto mx-md-0 text-md-start"
               >
                 Fresh, organic goodness delivered at your doorstep. Sign in and
                 continue your healthy journey.
@@ -164,7 +167,10 @@ export const Login = () => {
             </div>
 
             {/* small feature chips */}
-            <div style={{ gap: 21, display: "flex", flexWrap: "wrap" }}>
+            <div
+              style={{ gap: 12, display: "flex", flexWrap: "wrap" }}
+              className="justify-content-center justify-content-md-start"
+            >
               <div
                 style={{
                   display: "inline-flex",
@@ -227,10 +233,10 @@ export const Login = () => {
 
           {/* RIGHT SIDE – form */}
           <div
-            className="login-form-side d-flex flex-column"
+            className="login-form-side d-flex flex-column w-100"
             style={{
               flex: 1,
-              padding: "26px 28px 24px",
+              padding: "22px 20px 20px",
             }}
           >
             <div
@@ -242,7 +248,7 @@ export const Login = () => {
             >
               <h3
                 style={{
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: 600,
                   color: "#333",
                   marginBottom: 4,
@@ -363,7 +369,7 @@ export const Login = () => {
 
               <div className="mt-auto">
                 <button
-                  className="btn btn-primary d-block w-100"
+                  className="btn d-block w-100"
                   id="submit-id-submit"
                   type="submit"
                   disabled={loading}
@@ -377,6 +383,7 @@ export const Login = () => {
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 8,
+                    color: "#fff",
                   }}
                 >
                   <span>{loading ? "Logging in..." : "Login"}</span>
@@ -389,20 +396,19 @@ export const Login = () => {
                     fontSize: 13,
                   }}
                 >
-                 <p style={{ marginBottom: 0 }}>
-  Don&apos;t have an account?{" "}
-  <Link
-    id="register-link"
-    to="/singup"
-    style={{
-      pointerEvents: loading ? "none" : "auto",
-      opacity: loading ? 0.6 : 1,
-    }}
-  >
-    Sign Up!
-  </Link>
-</p>
-
+                  <p style={{ marginBottom: 0 }}>
+                    Don&apos;t have an account?{" "}
+                    <Link
+                      id="register-link"
+                      to="/singup"
+                      style={{
+                        pointerEvents: loading ? "none" : "auto",
+                        opacity: loading ? 0.6 : 1,
+                      }}
+                    >
+                      Sign Up!
+                    </Link>
+                  </p>
                 </div>
               </div>
             </form>
@@ -411,7 +417,10 @@ export const Login = () => {
 
         {/* Center full-screen OrganicRoots loader */}
         {loading && (
-          <OrganicRootsLoader message="Logging you in securely..." fullScreen />
+          <OrganicRootsLoader
+            message="Logging you in securely..."
+            fullScreen
+          />
         )}
       </div>
     </>

@@ -165,11 +165,11 @@ export const ListProduct = () => {
               Curated vegetables, fruits, dairy & more — filtered just for you.
             </p>
 
-            <div className="banner-chips">
+            {/* <div className="banner-chips">
               <span className="chip">Pesticide-free</span>
               <span className="chip">Handpicked daily</span>
               <span className="chip">Delivered chilled</span>
-            </div>
+            </div> */}
           </div>
 
           <div className="category-banner-right">

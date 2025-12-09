@@ -124,7 +124,7 @@ export const Footer = () => {
     <div className="footer-bottom">
       <div className="container">
         <p className="copyright">
-          © 2022{" "}
+          © 2025{" "}
           <a href="#" className="copyright-link">
             OrganicRootsmart
           </a>

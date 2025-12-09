@@ -9,6 +9,7 @@ import { Login } from "../Pages/Login";
 import { Singup } from "../Pages/Singup";
 import { Protected } from "../Component/Protected";
 import { AddProduct } from "../Pages/AddProduct";
+import { OrderSuccess } from "../Pages/OrderSuccess";
 
 
 export const Router = () => {
@@ -45,6 +46,7 @@ export const Router = () => {
 
         <Route path="/login" element={<Login />} />
         <Route path="/singup" element={<Singup />} />
+        
 
         {/* Checkout → only requires login */}
         <Route
@@ -55,6 +57,7 @@ export const Router = () => {
             </Protected>
           }
         />
+        <Route path="/order-success" element={<OrderSuccess />} />
       </Routes>
     </>
   );

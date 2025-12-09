@@ -8,7 +8,6 @@ import {
   FaShoppingBasket,
   FaSignOutAlt,
   FaHome,
-  FaShoppingBag,
   FaSearch,
   FaPlusCircle,
 } from "react-icons/fa";
@@ -34,9 +33,6 @@ export const Header = () => {
 
   // mobile search panel
   const [showMobileSearch, setShowMobileSearch] = useState(false);
-
-  // mobile hamburger menu (user + logout)
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -235,7 +231,6 @@ export const Header = () => {
 
     navigate(`/product/${target.id}`);
     setSearchResults([]);
-    setIsMobileNavOpen(false);
     setShowMobileSearch(false);
   };
 
@@ -244,11 +239,8 @@ export const Header = () => {
     navigate(`/product/${product.id}`);
     setSearchResults([]);
     setSearchTerm(product.name);
-    setIsMobileNavOpen(false);
     setShowMobileSearch(false);
   };
-
-  const closeMobileNav = () => setIsMobileNavOpen(false);
 
   const toggleMobileSearch = () => {
     setShowMobileSearch((prev) => !prev);
@@ -264,7 +256,7 @@ export const Header = () => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.35 }}
       >
-        {/* MAIN ROW: Logo left, nav center (desktop), icons + hamburger right */}
+        {/* MAIN ROW: Logo left, nav center (desktop), icons right */}
         <div className="nav-wrapper or-nav">
           <div className="container or-nav-inner">
             {/* 🌿 Logo */}
@@ -295,7 +287,7 @@ export const Header = () => {
                   <a
                     href="/"
                     className="navbar-link or-nav-pill"
-                    onClick={closeMobileNav}
+                    onClick={() => {}}
                   >
                     <span className="or-nav-icon"></span> Home
                   </a>
@@ -309,7 +301,7 @@ export const Header = () => {
                     spy
                     to="contact"
                     offset={-30}
-                    onClick={closeMobileNav}
+                    onClick={() => {}}
                   >
                     <span className="or-nav-icon"></span> About
                   </Link>
@@ -319,7 +311,7 @@ export const Header = () => {
                   <a
                     href="/shop"
                     className="navbar-link or-nav-pill"
-                    onClick={closeMobileNav}
+                    onClick={() => {}}
                   >
                     <span className="or-nav-icon"></span> Shop
                   </a>
@@ -333,7 +325,7 @@ export const Header = () => {
                     spy
                     to="products"
                     offset={-30}
-                    onClick={closeMobileNav}
+                    onClick={() => {}}
                   >
                     <span className="or-nav-icon"></span> Products
                   </Link>
@@ -347,7 +339,7 @@ export const Header = () => {
                     spy
                     to="blog"
                     offset={-30}
-                    onClick={closeMobileNav}
+                    onClick={() => {}}
                   >
                     <span className="or-nav-icon"></span> Blog
                   </Link>
@@ -361,7 +353,7 @@ export const Header = () => {
                     spy
                     to="contact"
                     offset={-30}
-                    onClick={closeMobileNav}
+                    onClick={() => {}}
                   >
                     <span className="or-nav-icon"></span> Contact
                   </Link>
@@ -374,7 +366,6 @@ export const Header = () => {
                       className="navbar-link or-nav-pill or-seller-pill"
                       onClick={() => {
                         navigate("/addProduct");
-                        closeMobileNav();
                       }}
                     >
                       <span className="or-nav-icon"></span>
@@ -385,7 +376,7 @@ export const Header = () => {
               </ul>
             </nav>
 
-            {/* RIGHT SIDE – Search (desktop) + icons + hamburger */}
+            {/* RIGHT SIDE – Search (desktop) + icons (desktop only) */}
             <div className="header-action or-right">
               {/* Search (desktop – hidden on mobile) */}
               <div className="or-search-wrapper or-desktop-search">
@@ -428,7 +419,7 @@ export const Header = () => {
                 </AnimatePresence>
               </div>
 
-              {/* User icon (hidden on mobile, shown in hamburger menu there) */}
+              {/* User icon (desktop) */}
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 className="header-action-btn or-icon-btn or-mobile-hide-auth"
@@ -438,7 +429,7 @@ export const Header = () => {
                 <FaUserCircle size={26} color="#305c3f" />
               </motion.button>
 
-              {/* Cart icon (hidden on mobile, visible on desktop) */}
+              {/* Cart icon (desktop) */}
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 className="header-action-btn or-icon-btn or-mobile-hide-cart"
@@ -456,7 +447,7 @@ export const Header = () => {
                 </motion.span>
               </motion.button>
 
-              {/* Logout (hidden on mobile, shown in hamburger menu there) */}
+              {/* Logout (desktop) */}
               {islogin && (
                 <motion.button
                   whileTap={{ scale: 0.9 }}
@@ -466,44 +457,6 @@ export const Header = () => {
                 >
                   <FaSignOutAlt size={26} color="#305c3f" />
                 </motion.button>
-              )}
-
-              {/* Hamburger icon (mobile only, rightmost) */}
-              <button
-                className="or-hamburger-btn"
-                aria-label="Account Menu"
-                onClick={() => setIsMobileNavOpen((prev) => !prev)}
-              >
-                <span className="or-hamburger-lines" />
-              </button>
-
-              {/* Hamburger dropdown (mobile) */}
-              {isMobileNavOpen && (
-                <div className="or-hamburger-menu">
-                  <button
-                    className="or-hamburger-item"
-                    onClick={() => {
-                      navigate(islogin ? "/" : "/login");
-                      setIsMobileNavOpen(false);
-                    }}
-                  >
-                    <FaUserCircle size={18} />
-                    <span>{islogin ? "Profile" : "Login"}</span>
-                  </button>
-
-                  {islogin && (
-                    <button
-                      className="or-hamburger-item"
-                      onClick={() => {
-                        setIsMobileNavOpen(false);
-                        handleLogoutClick();
-                      }}
-                    >
-                      <FaSignOutAlt size={18} />
-                      <span>Logout</span>
-                    </button>
-                  )}
-                </div>
               )}
             </div>
           </div>
@@ -557,25 +510,30 @@ export const Header = () => {
         )}
       </motion.header>
 
-      {/* MOBILE BOTTOM NAVBAR (icons only): Home, Shop, Search, Add Product, Cart */}
+      {/* MOBILE BOTTOM NAVBAR (updated): Home, Cart, Add Product, Search, User/Logout */}
       <div className="or-mobile-bottom-nav">
+        {/* Home */}
         <button
           className="or-bottom-nav-btn"
           onClick={() => navigate("/")}
           aria-label="Home"
         >
           <FaHome size={20} />
+          
         </button>
 
+        {/* Cart in place of Shop */}
         <button
           className="or-bottom-nav-btn"
-          onClick={() => navigate("/shop")}
-          aria-label="Shop"
+          onClick={handalRedirect}
+          aria-label="Cart"
         >
-          <FaShoppingBag size={20} />
+          <FaShoppingBasket size={20} />
+          
         </button>
 
-         <button
+        {/* Add product (kept same) */}
+        <button
           className="or-bottom-nav-btn"
           onClick={() => navigate("/addProduct")}
           aria-label="Add Product"
@@ -583,6 +541,7 @@ export const Header = () => {
           <FaPlusCircle size={20} />
         </button>
 
+        {/* Search */}
         <button
           className="or-bottom-nav-btn"
           onClick={toggleMobileSearch}
@@ -591,14 +550,19 @@ export const Header = () => {
           <FaSearch size={18} />
         </button>
 
-       
-
+        {/* User / Logout icon in place of old Cart slot */}
         <button
           className="or-bottom-nav-btn"
-          onClick={handalRedirect}
-          aria-label="Cart"
+          onClick={() => {
+            if (islogin) {
+              handleLogoutClick();
+            } else {
+              navigate("/login");
+            }
+          }}
+          aria-label={islogin ? "Logout" : "Login"}
         >
-          <FaShoppingBasket size={20} />
+          {islogin ? <FaSignOutAlt size={20} /> : <FaUserCircle size={20} />}
         </button>
       </div>
 
@@ -664,8 +628,8 @@ export const Header = () => {
         }
 
         .organicroots-header.shrink .or-nav {
-          padding-top: 2px;
-          padding-bottom: 2px;
+          padding-top: 0;
+          padding-bottom: 0;
         }
 
         .organicroots-header.shrink .or-logo-title {
@@ -878,73 +842,6 @@ export const Header = () => {
           line-height: 1.4;
         }
 
-        .or-hamburger-btn {
-          border: none;
-          background: rgba(255,255,255,0.95);
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          display: none;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 3px 9px rgba(0,0,0,0.15);
-          margin-left: 4px;
-        }
-
-        .or-hamburger-lines {
-          width: 18px;
-          height: 2px;
-          background: #305c3f;
-          position: relative;
-        }
-
-        .or-hamburger-lines::before,
-        .or-hamburger-lines::after {
-          content: "";
-          position: absolute;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background: #305c3f;
-        }
-
-        .or-hamburger-lines::before {
-          top: -5px;
-        }
-
-        .or-hamburger-lines::after {
-          top: 5px;
-        }
-
-        .or-hamburger-menu {
-          position: absolute;
-          top: 110%;
-          right: 0;
-          background: #ffffff;
-          border-radius: 12px;
-          box-shadow: 0 10px 24px rgba(0,0,0,0.18);
-          padding: 6px 0;
-          z-index: 80;
-          min-width: 140px;
-          display: none;
-        }
-
-        .or-hamburger-item {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 12px;
-          border: none;
-          background: transparent;
-          cursor: pointer;
-          font-size: 13px;
-        }
-
-        .or-hamburger-item:hover {
-          background: #f2fff6;
-        }
-
         .modal-backdrop {
           position: fixed;
           inset: 0;
@@ -993,31 +890,35 @@ export const Header = () => {
         }
 
         @media (max-width: 768px) {
-          /* reduce header height */
+          /* decrease header height on mobile */
           .or-nav {
-            padding: 4px 0;
+            padding: 2px 0;
+          }
+
+          .organicroots-header {
+            padding-bottom: 0;
           }
 
           .or-nav-inner {
-            gap: 10px;
+            gap: 8px;
           }
 
           .or-logo-circle {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             border-radius: 10px;
-            font-size: 16px;
+            font-size: 15px;
           }
 
           .or-logo-title {
-            font-size: 16px;
+            font-size: 15px;
           }
 
           .or-logo-sub {
             font-size: 8px;
           }
 
-          /* hide nav links on mobile, keep only logo + right icons */
+          /* hide nav links on mobile, keep only logo */
           .desktop-navbar {
             display: none;
           }
@@ -1041,16 +942,6 @@ export const Header = () => {
             display: none;
           }
 
-          .or-hamburger-btn {
-            display: flex;
-            width: 38px;
-            height: 38px;
-          }
-
-          .or-hamburger-menu {
-            display: block;
-          }
-
           .or-mobile-search-panel {
             display: block;
             padding-bottom: 4px;
@@ -1067,7 +958,7 @@ export const Header = () => {
             left: 0;
             right: 0;
             bottom: 0;
-            height: 54px;
+            height: 50px;
             background: #ffffff;
             box-shadow: 0 -4px 16px rgba(0,0,0,0.1);
             z-index: 70;
@@ -1082,15 +973,11 @@ export const Header = () => {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 6px 0;
+            padding: 4px 0;
           }
 
           .or-bottom-nav-btn svg {
             color: #305c3f;
-          }
-
-          .organicroots-header {
-            padding-bottom: 2px;
           }
         }
       `}</style>
