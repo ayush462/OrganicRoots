@@ -38,9 +38,8 @@ export const Router = () => {
         <Route
           path="/addProduct"
           element={
-            <Protected isSignedIn={isSignedIn} allowedRoles={["SELLER"]}>
+           
               <AddProduct />
-            </Protected>
           }
         />
 

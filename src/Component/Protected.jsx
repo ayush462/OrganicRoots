@@ -3,7 +3,10 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 export const Protected = ({ isSignedIn, allowedRoles, children }) => {
-  const role = sessionStorage.getItem("role"); // "SELLER" / "BUYER" / null
+  const role = sessionStorage.getItem("role");
+  
+  // "SELLER" / "BUYER" / null
+  console.log(role);
 
   // Not logged in → go to login
   if (!isSignedIn) {

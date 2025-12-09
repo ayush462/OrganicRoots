@@ -22,6 +22,7 @@ export const Header = () => {
   const [userRole, setUserRole] = useState(null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false); // 🚨 NEW for buyer trying to add product
 
   const [searchTerm, setSearchTerm] = useState("");
   const [allProducts, setAllProducts] = useState([]); // {id, name}
@@ -94,6 +95,7 @@ export const Header = () => {
 
       const data = await res.json();
       setUserRole(data.role);
+      console.log("✅ Fetched user role:", data.role);
       sessionStorage.setItem("role", data.role);
     } catch (err) {
       console.error("❌ Error fetching user role:", err);
@@ -245,6 +247,21 @@ export const Header = () => {
   const toggleMobileSearch = () => {
     setShowMobileSearch((prev) => !prev);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // 🚨 New: handle Add Product in mobile with role check
+  const handleAddProductClick = () => {
+    if (!islogin) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    if (userRole === "SELLER") {
+      navigate("/addProduct");
+    } else {
+      // Buyer or unknown role
+      setShowRoleModal(true);
+    }
   };
 
   return (
@@ -510,7 +527,7 @@ export const Header = () => {
         )}
       </motion.header>
 
-      {/* MOBILE BOTTOM NAVBAR (updated): Home, Cart, Add Product, Search, User/Logout */}
+      {/* MOBILE BOTTOM NAVBAR: Home, Cart, Add Product, Search, User/Logout */}
       <div className="or-mobile-bottom-nav">
         {/* Home */}
         <button
@@ -519,23 +536,29 @@ export const Header = () => {
           aria-label="Home"
         >
           <FaHome size={20} />
-          
         </button>
 
-        {/* Cart in place of Shop */}
+        {/* Cart with badge */}
         <button
           className="or-bottom-nav-btn"
           onClick={handalRedirect}
           aria-label="Cart"
         >
           <FaShoppingBasket size={20} />
-          
+          <motion.span
+            className="or-cart-badge"
+            key={`m-${cartCount}`}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+          >
+            {cartCount}
+          </motion.span>
         </button>
 
-        {/* Add product (kept same) */}
+        {/* Add product (role-aware) */}
         <button
           className="or-bottom-nav-btn"
-          onClick={() => navigate("/addProduct")}
+          onClick={handleAddProductClick}
           aria-label="Add Product"
         >
           <FaPlusCircle size={20} />
@@ -550,7 +573,7 @@ export const Header = () => {
           <FaSearch size={18} />
         </button>
 
-        {/* User / Logout icon in place of old Cart slot */}
+        {/* User / Logout icon */}
         <button
           className="or-bottom-nav-btn"
           onClick={() => {
@@ -598,7 +621,7 @@ export const Header = () => {
             initial={{ scale: 0.9, opacity: 0, y: 10 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
           >
-            <p>You need to login to view your cart.</p>
+            <p>You need to login to perform this action.</p>
             <div className="modal-actions">
               <button onClick={handleGoToLogin} className="btn btn-success">
                 Go to Login
@@ -608,6 +631,30 @@ export const Header = () => {
                 className="btn btn-secondary"
               >
                 Cancel
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Buyer-trying-to-add-product modal */}
+      {showRoleModal && (
+        <div className="modal-backdrop">
+          <motion.div
+            className="modal-box or-modal"
+            initial={{ scale: 0.9, opacity: 0, y: 10 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+          >
+            <p>
+              You cannot add products with a buyer account. Please sign up as a
+              seller to add products.
+            </p>
+            <div className="modal-actions">
+              <button
+                onClick={() => setShowRoleModal(false)}
+                className="btn btn-secondary"
+              >
+                Okay
               </button>
             </div>
           </motion.div>
@@ -974,10 +1021,18 @@ export const Header = () => {
             align-items: center;
             justify-content: center;
             padding: 4px 0;
+            position: relative; /* needed for mobile badge */
           }
 
           .or-bottom-nav-btn svg {
             color: #305c3f;
+          }
+
+          /* tweak cart badge position on mobile */
+          .or-cart-badge {
+            top: 2px;
+            right: 18px;
+            font-size: 9px;
           }
         }
       `}</style>
