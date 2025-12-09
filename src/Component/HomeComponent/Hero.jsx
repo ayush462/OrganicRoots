@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-
 export const Hero = () => {
   return (
     <>
@@ -637,17 +636,29 @@ export const Hero = () => {
           }
 
           .hero-card-right{
-          display: none;
+            display: none;
+          }
+
+          /* 🔹 MOBILE: keep 3D card vertical (no tilt) */
+          .hero-scene-wrapper {
+            perspective: none;
           }
 
           .hero-scene {
-            transform: rotateY(-10deg) rotateX(10deg);
+            transform: none;
+            animation: mobileSceneFloat 4.5s ease-in-out infinite alternate;
           }
 
-          @keyframes sceneFloat {
-            0% { transform: rotateY(-10deg) rotateX(10deg) translateY(0); }
-            50% { transform: rotateY(-6deg) rotateX(13deg) translateY(-10px); }
-            100% { transform: rotateY(-12deg) rotateX(8deg) translateY(4px); }
+          @keyframes mobileSceneFloat {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(4px); }
+          }
+
+          /* 🔹 MOBILE: remove badges + floating fruits around image */
+          .hero-floating-badge,
+          .hero-fruit {
+            display: none;
           }
         }
 
@@ -705,12 +716,6 @@ export const Hero = () => {
               at your doorstep.
             </h1>
 
-            {/* <p className="hero-text">
-              Experience grocery shopping in a whole new way. Explore vibrant,
-              farm-fresh fruits, vegetables and essentials with real-time
-              freshness and eco-friendly delivery.
-            </p> */}
-
             <div className="hero-stats-row">
               <div className="hero-stat">
                 <div className="hero-stat-value">150+</div>
@@ -728,17 +733,17 @@ export const Hero = () => {
 
             <div className="hero-actions">
               <Link to="/shop" className="hero-btn-primary">
-        Start shopping
-        <span className="icon">→</span>
-      </Link>
+                Start shopping
+                <span className="icon">→</span>
+              </Link>
 
-      <Link
-        to="/shop"
-        className="hero-btn-ghost"
-      >
-        <span className="hero-btn-ghost-dot" />
-        View today&apos;s organic box
-      </Link>
+              <Link
+                to="/shop"
+                className="hero-btn-ghost"
+              >
+                <span className="hero-btn-ghost-dot" />
+                View today&apos;s organic box
+              </Link>
             </div>
 
             <div className="hero-note">
@@ -763,7 +768,6 @@ export const Hero = () => {
                   <div className="hero-card-body">
                     <div className="hero-card-img-wrap">
                       <div className="hero-card-img-inner">
-                        {/* Use your existing hero vegetables image here */}
                         <img
                           src="./images/hero-banner.png"
                           alt="Organic vegetable basket"
@@ -804,10 +808,6 @@ export const Hero = () => {
                         <button className="hero-card-btn">
                           Add to cart
                         </button>
-                        {/* <span className="hero-card-stock">
-                          <span className="hero-card-stock-dot" />
-                          In stock · 32 left today
-                        </span> */}
                       </div>
                     </div>
                   </div>
