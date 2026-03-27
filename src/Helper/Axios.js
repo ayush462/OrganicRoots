@@ -2,20 +2,30 @@ import axios from "axios";
 
 const axiosFetch = async ({ url, method, data = null }) => {
   try {
-    const token = sessionStorage.getItem("token") ?? "{}";
+    let token = null;
+
+    // ✅ Prevent SSR crash (VERY IMPORTANT for Vercel)
+    if (typeof window !== "undefined") {
+      token = sessionStorage.getItem("token");
+    }
 
     const response = await axios.request({
-      url: "https://organicrootsbackend.onrender.com/" + url,   // FIXED PORT
+      url: "https://organicrootsbackend.onrender.com/" + url,
       method,
-      data: data,
+      data,
       headers: {
         Authorization: token ? `Bearer ${token}` : "",
       },
     });
 
-    return response;
+    return response.data; // cleaner
   } catch (err) {
-    return err;
+    console.error("Axios Error:", err.response || err.message);
+
+    return {
+      success: false,
+      error: err.response?.data || err.message,
+    };
   }
 };
 
