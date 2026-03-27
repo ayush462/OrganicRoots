@@ -5,7 +5,7 @@ const axiosFetch = async ({ url, method, data = null }) => {
     const token = sessionStorage.getItem("token") ?? "{}";
 
     const response = await axios.request({
-      url: "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/" + url,   // FIXED PORT
+      url: "https://organicrootsbackend.onrender.com/" + url,   // FIXED PORT
       method,
       data: data,
       headers: {
