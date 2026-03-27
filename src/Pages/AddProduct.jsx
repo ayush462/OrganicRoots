@@ -61,7 +61,7 @@ export const AddProduct = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/product/add",
+        "https://organicrootsbackend.onrender.com/product/add",
         {
           method: "POST",
           headers: {

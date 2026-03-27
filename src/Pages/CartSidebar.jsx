@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom"; // ✅ NEW
 
 const BASE_URL =
-  "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090";
+  "https://organicrootsbackend.onrender.com";
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {

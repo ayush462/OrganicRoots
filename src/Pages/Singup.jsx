@@ -30,7 +30,7 @@ export const Singup = () => {
 
     try {
       const res = await fetch(
-        "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/auth/singup",
+        "https://organicrootsbackend.onrender.com/auth/singup",
         {
           method: "POST",
           headers: {

@@ -23,7 +23,7 @@ export const Login = () => {
 
     try {
       const res = await fetch(
-        "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/auth/singin",
+        "https://organicrootsbackend.onrender.com/auth/singin",
         {
           method: "POST",
           headers: {

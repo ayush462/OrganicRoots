@@ -30,7 +30,7 @@ export const ProductDetails = () => {
   const handleCart = async () => {
     if (!data || !data.productId) return;
 
-    const res = await fetch(`http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/cart/addproduct`, {
+    const res = await fetch(`https://organicrootsbackend.onrender.com/cart/addproduct`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export const ProductDetails = () => {
     window.scrollTo(0, 0);
 
     const fatchData = async () => {
-      const response = await fetch(`http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/product/${id}`, {
+      const response = await fetch(`https://organicrootsbackend.onrender.com/product/${id}`, {
         headers: {
           Authorization: "Bearer " + token,
         },

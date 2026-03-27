@@ -12,7 +12,7 @@ export const Items = ({ prop, setLoading }) => {
   const updateQuantity = async (q) => {
     if (!q || !prop.product.productId) return;
 
-    const res = await fetch(`http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/cart/addproduct`, {
+    const res = await fetch(`https://organicrootsbackend.onrender.com/cart/addproduct`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +53,7 @@ export const Items = ({ prop, setLoading }) => {
 
   const handleRemove = async () => {
     const res = await fetch(
-      `http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/cart/product/${prop.product.productId}`,
+      `https://organicrootsbackend.onrender.com/cart/product/${prop.product.productId}`,
       {
         method: "DELETE",
         headers: {

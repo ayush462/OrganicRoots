@@ -4,7 +4,7 @@ import { Header } from "../Component/Header";
 import { Items } from "../Component/CartComponent/Items";
 import toast from "react-hot-toast";
 
-const BASE_URL = "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090";
+const BASE_URL = "https://organicrootsbackend.onrender.com";
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {

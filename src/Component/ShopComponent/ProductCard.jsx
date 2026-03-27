@@ -18,7 +18,7 @@ export const ProductCard = (props) => {
       return;
     }
 
-    const res = await fetch("http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/cart/addproduct", {
+    const res = await fetch("https://organicrootsbackend.onrender.com/cart/addproduct", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

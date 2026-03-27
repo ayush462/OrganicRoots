@@ -54,7 +54,7 @@ export const Header = () => {
 
     try {
       const res = await fetch(
-        "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/cart/count",
+        "https://organicrootsbackend.onrender.com/cart/count",
         {
           headers: {
             "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export const Header = () => {
 
     try {
       const res = await fetch(
-        "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/auth/role",
+        "https://organicrootsbackend.onrender.com/auth/role",
         {
           headers: {
             "Content-Type": "application/json",
@@ -107,7 +107,7 @@ export const Header = () => {
   const fetchAllProducts = async () => {
     try {
       const res = await fetch(
-        "http://ec2-13-233-163-146.ap-south-1.compute.amazonaws.com:9090/product/"
+        "https://organicrootsbackend.onrender.com/product/"
       );
       const data = await res.json();
 
