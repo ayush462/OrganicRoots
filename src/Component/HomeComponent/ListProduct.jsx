@@ -81,13 +81,15 @@ export const ListProduct = () => {
 
       console.log("Products fetched:", response.data);
 
-      const raw = Array.isArray(response.data)
-        ? response.data
-        : Array.isArray(response.data.content)
-        ? response.data.content
-        : Array.isArray(response.data.products)
-        ? response.data.products
-        : [];
+      console.log("Products fetched:", response);
+
+const raw = Array.isArray(response)
+  ? response
+  : Array.isArray(response?.content)
+  ? response.content
+  : Array.isArray(response?.products)
+  ? response.products
+  : [];
 
       const withCategory = raw.map((item) => ({
         ...item,

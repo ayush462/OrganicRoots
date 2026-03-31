@@ -1,32 +1,46 @@
 import axios from "axios";
 
-const axiosFetch = async ({ url, method, data = null }) => {
-  try {
-    let token = null;
+const axiosInstance = axios.create({
+  baseURL: "https://organicrootsbackend.onrender.com/",
+  timeout: 15000,
+});
 
-    // ✅ Prevent SSR crash (VERY IMPORTANT for Vercel)
-    if (typeof window !== "undefined") {
-      token = sessionStorage.getItem("token");
+// 🔐 Request interceptor (attach token)
+axiosInstance.interceptors.request.use((config) => {
+  if (typeof window !== "undefined") {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
-
-    const response = await axios.request({
-      url: "https://organicrootsbackend.onrender.com/" + url,
-      method,
-      data,
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-      },
-    });
-
-    return response.data; // cleaner
-  } catch (err) {
-    console.error("Axios Error:", err.response || err.message);
-
-    return {
-      success: false,
-      error: err.response?.data || err.message,
-    };
   }
+  return config;
+});
+
+// 🎯 Response interceptor (standardize response)
+axiosInstance.interceptors.response.use(
+  (response) => {
+    // ✅ ALWAYS return only data (clean + consistent)
+    return response.data;
+  },
+  (error) => {
+    console.error(
+      "Axios Error:",
+      error.response?.data || error.message
+    );
+
+    // ❌ THROW error instead of returning fake object
+    throw error.response?.data || error;
+  }
+);
+
+// 🚀 Main function
+const axiosFetch = async ({ url, method = "GET", data = null, params = null }) => {
+  return axiosInstance({
+    url,
+    method,
+    data,
+    params,
+  });
 };
 
 export default axiosFetch;
